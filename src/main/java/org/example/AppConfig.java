@@ -30,8 +30,7 @@ public final class AppConfig {
     public static final int DEFAULT_CLICK_LIMIT =
             Integer.parseInt(PROPERTIES.getProperty("link.default-click-limit"));
 
-    public static final String BASE_URL =
-            PROPERTIES.getProperty("link.base-url");
+    public static final String BASE_URL = PROPERTIES.getProperty("link.base-url");
 
     private AppConfig() {}
 }
