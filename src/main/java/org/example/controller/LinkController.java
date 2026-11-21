@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,11 +42,20 @@ public class LinkController {
     public String open(List<String> args) {
         requireArgs(args, 1, "open <short-url>");
 
-        String code = args.get(0);
+        String originalUrl = redirectService.open(args.get(0));
 
-        redirectService.open(code);
+        try {
+            if (!Desktop.isDesktopSupported()
+                    || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                throw new IllegalStateException("Browser is not supported");
+            }
 
-        return "Opening: " + code;
+            Desktop.getDesktop().browse(URI.create(originalUrl));
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to open browser", e);
+        }
+
+        return "Opening: " + originalUrl;
     }
 
     public String list(List<String> args) {

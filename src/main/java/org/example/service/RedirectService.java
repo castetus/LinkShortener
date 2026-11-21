@@ -12,8 +12,6 @@ public class RedirectService {
     public String open(String code) {
         ShortLink link = linkService.getByCode(code);
 
-        // Здесь будут проверки TTL и лимита
-
         link.incrementClickCount();
 
         return link.getOriginalUrl();
