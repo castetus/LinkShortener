@@ -45,7 +45,13 @@ public class ShortLink {
         this.clickCount++;
     }
 
-    public void setClickLimit(int limit) {
-        this.clickLimit = limit;
+    public void updateClickLimit(int newLimit) {
+        if (newLimit < clickCount) {
+            throw new IllegalArgumentException(
+                    "New limit cannot be less than current click count"
+            );
+        }
+
+        this.clickLimit = newLimit;
     }
 }
