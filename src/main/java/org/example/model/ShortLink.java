@@ -50,6 +50,10 @@ public class ShortLink {
     }
 
     public void incrementClickCount() {
+        if (clickCount >= clickLimit) {
+            throw new IllegalStateException("Click limit exceeded");
+        }
+
         this.clickCount++;
     }
 

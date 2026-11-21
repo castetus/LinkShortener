@@ -11,7 +11,7 @@ import org.example.session.UserSession;
 public class Main {
     public static void main(String[] args) {
         LinkService linkService = new LinkService();
-        RedirectService redirectService = new RedirectService();
+        RedirectService redirectService = new RedirectService(linkService);
         UserSession userSession = new UserSession();
         LinkController linkController = new LinkController(
                 linkService,
