@@ -29,6 +29,10 @@ public class ShortLink {
         return this.originalUrl;
     }
 
+    public String getCode() {
+        return this.code;
+    }
+
     public UUID getOwnerId() {
         return this.ownerId;
     }
@@ -39,6 +43,10 @@ public class ShortLink {
 
     public int getClickCount() {
         return this.clickCount;
+    }
+
+    public Instant getCreatedAt() {
+        return this.createdAt;
     }
 
     public void incrementClickCount() {

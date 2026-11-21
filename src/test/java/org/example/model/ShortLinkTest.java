@@ -1,4 +1,4 @@
-package org.example.service.model;
+package org.example.model;
 
 import org.example.model.ShortLink;
 import org.junit.jupiter.api.Test;
