@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+
+import org.example.AppConfig;
 import org.example.model.ShortLink;
 import org.example.service.LinkService;
 import org.example.service.RedirectService;
@@ -24,10 +26,14 @@ public class LinkController {
     }
 
     public String create(List<String> args) {
-        requireArgs(args, 2, "create <url> <limit>");
+        if (args.isEmpty() || args.size() > 2) {
+            return "Usage: create <url> [limit]";
+        }
 
         String url = args.get(0);
-        int limit = parsePositiveInt(args.get(1));
+        int limit = args.size() > 1
+                ? Integer.parseInt(args.get(1))
+                : AppConfig.DEFAULT_CLICK_LIMIT;
 
         UUID ownerId = userSession.getOrCreateUserId();
         ShortLink link = linkService.create(url, ownerId, limit);
@@ -38,20 +44,20 @@ public class LinkController {
     public String open(List<String> args) {
         requireArgs(args, 1, "open <short-url>");
 
-        String originalUrl = redirectService.open(args.get(0));
-
         try {
             if (!Desktop.isDesktopSupported()
                     || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                 throw new IllegalStateException("Browser is not supported");
             }
 
+            String originalUrl = redirectService.open(args.get(0));
+
             Desktop.getDesktop().browse(URI.create(originalUrl));
+
+            return "Opening: " + originalUrl;
         } catch (IOException e) {
             throw new IllegalStateException("Failed to open browser", e);
         }
-
-        return "Opening: " + originalUrl;
     }
 
     public String list(List<String> args) {

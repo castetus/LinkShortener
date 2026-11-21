@@ -2,6 +2,7 @@ package org.example.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Duration;
 import java.util.UUID;
 import org.example.model.ShortLink;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,5 +53,25 @@ class RedirectServiceTest {
     @Test
     void shouldRejectUnknownCode() {
         assertThrows(IllegalArgumentException.class, () -> redirectService.open("unknown"));
+    }
+
+    @Test
+    void shouldRejectExpiredLink() {
+        ShortLink link = linkService.create(
+                "https://example.com",
+                UUID.randomUUID(),
+                5
+        );
+
+        linkService.removeExpired(
+                link.getCreatedAt().plus(Duration.ofHours(25))
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> redirectService.open(link.getCode())
+        );
+
+        assertEquals(0, link.getClickCount());
     }
 }

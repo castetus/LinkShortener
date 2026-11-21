@@ -70,11 +70,6 @@ public class ConsoleApp {
 
             case "delete" -> System.out.println(linkController.delete(args));
 
-            case "whoami" -> {
-                // Will be connected to UserSession
-                System.out.println("User session not connected yet");
-            }
-
             case "exit" -> {
                 if (!args.isEmpty()) {
                     System.out.println("Usage: exit");
@@ -98,13 +93,12 @@ public class ConsoleApp {
                 """
 
                 Available commands:
-                  create <url> <limit>             Create short link
+                  create <url> [limit]            Create short link
                   open <short-url>                Open original URL
                   list                            List your links
                   info <short-url>                Show link information
                   edit <short-url> <new-limit>    Change click limit
                   delete <short-url>              Delete link
-                  whoami                          Show current user UUID
                   help                            Show this help
                   exit                            Exit application
                 """);

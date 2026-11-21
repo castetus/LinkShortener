@@ -69,4 +69,34 @@ class LinkServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> linkService.getByCode(link.getCode()));
     }
+
+    @Test
+    void shouldRejectUpdatingOtherUsersLink() {
+        UUID ownerId = UUID.randomUUID();
+        UUID anotherUserId = UUID.randomUUID();
+
+        ShortLink link = linkService.create("https://example.com", ownerId, 5);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> linkService.updateLimit(link.getCode(), anotherUserId, 10)
+        );
+
+        assertEquals(5, link.getClickLimit());
+    }
+
+    @Test
+    void shouldRejectDeletingOtherUsersLink() {
+        UUID ownerId = UUID.randomUUID();
+        UUID anotherUserId = UUID.randomUUID();
+
+        ShortLink link = linkService.create("https://example.com", ownerId, 5);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> linkService.delete(link.getCode(), anotherUserId)
+        );
+
+        assertSame(link, linkService.getByCode(link.getCode()));
+    }
 }
