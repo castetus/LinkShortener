@@ -1,8 +1,7 @@
 package org.example.service;
 
-import org.example.model.ShortLink;
-
 import java.time.Instant;
+import org.example.model.ShortLink;
 
 public class RedirectService {
     private final LinkService linkService;

@@ -1,4 +1,3 @@
-
 package org.example.cli;
 
 import java.util.List;
@@ -59,23 +58,17 @@ public class ConsoleApp {
                 }
             }
 
-            case "create" ->
-                    System.out.println(linkController.create(args));
+            case "create" -> System.out.println(linkController.create(args));
 
-            case "open" ->
-                    System.out.println(linkController.open(args));
+            case "open" -> System.out.println(linkController.open(args));
 
-            case "list" ->
-                    System.out.println(linkController.list(args));
+            case "list" -> System.out.println(linkController.list(args));
 
-            case "info" ->
-                    System.out.println(linkController.info(args));
+            case "info" -> System.out.println(linkController.info(args));
 
-            case "edit" ->
-                    System.out.println(linkController.edit(args));
+            case "edit" -> System.out.println(linkController.edit(args));
 
-            case "delete" ->
-                    System.out.println(linkController.delete(args));
+            case "delete" -> System.out.println(linkController.delete(args));
 
             case "whoami" -> {
                 // Will be connected to UserSession
@@ -90,17 +83,19 @@ public class ConsoleApp {
                 }
             }
 
-            default -> System.out.println(
-                    "Unknown command: " + command.name()
-                            + ". Type 'help' for available commands."
-            );
+            default ->
+                    System.out.println(
+                            "Unknown command: "
+                                    + command.name()
+                                    + ". Type 'help' for available commands.");
         }
 
         return false;
     }
 
     private void printHelp() {
-        System.out.println("""
+        System.out.println(
+                """
 
                 Available commands:
                   create <url> <limit>             Create short link

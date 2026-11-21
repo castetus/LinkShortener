@@ -13,9 +13,7 @@ public class CommandParser {
         String[] parts = input.trim().split("\\s+");
 
         return new ParsedCommand(
-                parts[0].toLowerCase(),
-                Arrays.asList(parts).subList(1, parts.length)
-        );
+                parts[0].toLowerCase(), Arrays.asList(parts).subList(1, parts.length));
     }
 
     public record ParsedCommand(String name, List<String> args) {}

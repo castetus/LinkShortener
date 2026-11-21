@@ -1,24 +1,18 @@
 package org.example.service;
 
-import org.example.model.ShortLink;
-
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.example.model.ShortLink;
 
 public class LinkService {
 
     private final Map<String, ShortLink> links = new ConcurrentHashMap<>();
     private final ShortCodeGenerator generator = new ShortCodeGenerator();
 
-    public ShortLink create(
-            String originalUrl,
-            UUID ownerId,
-            int clickLimit
-    ) {
+    public ShortLink create(String originalUrl, UUID ownerId, int clickLimit) {
         String code;
 
         do {

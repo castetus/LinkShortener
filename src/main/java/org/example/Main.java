@@ -12,16 +12,11 @@ public class Main {
         LinkService linkService = new LinkService();
         RedirectService redirectService = new RedirectService(linkService);
         UserSession userSession = new UserSession();
-        LinkController linkController = new LinkController(
-                linkService,
-                redirectService,
-                userSession
-        );
+        LinkController linkController =
+                new LinkController(linkService, redirectService, userSession);
         ConsoleApp app = new ConsoleApp(linkController);
 
-        LinkCleanupService cleanupService = new LinkCleanupService(
-                linkService
-        );
+        LinkCleanupService cleanupService = new LinkCleanupService(linkService);
 
         cleanupService.start();
 

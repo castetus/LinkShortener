@@ -1,33 +1,20 @@
 package org.example.model;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ShortLinkTest {
 
-    private ShortLink createTestLink () {
-        return new ShortLink(
-                "https://example.com",
-                "abc123",
-                UUID.randomUUID(),
-                10,
-                Instant.now()
-        );
+    private ShortLink createTestLink() {
+        return new ShortLink("https://example.com", "abc123", UUID.randomUUID(), 10, Instant.now());
     }
 
     private ShortLink createTestLink(Instant createdAt) {
-        return new ShortLink(
-                "https://example.com",
-                "abc123",
-                UUID.randomUUID(),
-                3,
-                createdAt
-        );
+        return new ShortLink("https://example.com", "abc123", UUID.randomUUID(), 3, createdAt);
     }
 
     @Test
@@ -56,10 +43,7 @@ public class ShortLinkTest {
         link.incrementClickCount();
         link.incrementClickCount();
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> link.updateClickLimit(1)
-        );
+        assertThrows(IllegalArgumentException.class, () -> link.updateClickLimit(1));
     }
 
     @Test
@@ -68,9 +52,7 @@ public class ShortLinkTest {
 
         ShortLink link = this.createTestLink(createdAt);
 
-        assertFalse(link.isExpired(
-                createdAt.plus(Duration.ofHours(23))
-        ));
+        assertFalse(link.isExpired(createdAt.plus(Duration.ofHours(23))));
     }
 
     @Test
@@ -79,8 +61,6 @@ public class ShortLinkTest {
 
         ShortLink link = this.createTestLink(createdAt);
 
-        assertTrue(link.isExpired(
-                createdAt.plus(Duration.ofHours(24))
-        ));
+        assertTrue(link.isExpired(createdAt.plus(Duration.ofHours(24))));
     }
 }

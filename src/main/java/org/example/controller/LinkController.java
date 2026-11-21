@@ -1,11 +1,10 @@
 package org.example.controller;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-
 import org.example.model.ShortLink;
 import org.example.service.LinkService;
 import org.example.service.RedirectService;
@@ -18,10 +17,7 @@ public class LinkController {
     private final UserSession userSession;
 
     public LinkController(
-            LinkService linkService,
-            RedirectService redirectService,
-            UserSession userSession
-    ) {
+            LinkService linkService, RedirectService redirectService, UserSession userSession) {
         this.linkService = linkService;
         this.redirectService = redirectService;
         this.userSession = userSession;
@@ -95,13 +91,14 @@ public class LinkController {
                 Original URL: %s
                 Clicks: %d / %d
                 Created at: %s
-                """.formatted(
-                link.getCode(),
-                link.getOriginalUrl(),
-                link.getClickCount(),
-                link.getClickLimit(),
-                link.getCreatedAt()
-        ).stripTrailing();
+                """
+                .formatted(
+                        link.getCode(),
+                        link.getOriginalUrl(),
+                        link.getClickCount(),
+                        link.getClickLimit(),
+                        link.getCreatedAt())
+                .stripTrailing();
     }
 
     public String edit(List<String> args) {
@@ -137,11 +134,7 @@ public class LinkController {
         return userId;
     }
 
-    private void requireArgs(
-            List<String> args,
-            int expected,
-            String usage
-    ) {
+    private void requireArgs(List<String> args, int expected, String usage) {
         if (args.size() != expected) {
             throw new IllegalArgumentException("Usage: " + usage);
         }
@@ -152,16 +145,12 @@ public class LinkController {
             int number = Integer.parseInt(value);
 
             if (number <= 0) {
-                throw new IllegalArgumentException(
-                        "Limit must be a positive integer"
-                );
+                throw new IllegalArgumentException("Limit must be a positive integer");
             }
 
             return number;
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(
-                    "Limit must be a positive integer"
-            );
+            throw new IllegalArgumentException("Limit must be a positive integer");
         }
     }
 }

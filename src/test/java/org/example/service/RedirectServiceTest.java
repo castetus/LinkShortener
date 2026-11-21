@@ -1,13 +1,11 @@
-
 package org.example.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.UUID;
 import org.example.model.ShortLink;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RedirectServiceTest {
 
@@ -22,11 +20,7 @@ class RedirectServiceTest {
 
     @Test
     void shouldReturnOriginalUrlAndIncrementClickCount() {
-        ShortLink link = linkService.create(
-                "https://example.com",
-                UUID.randomUUID(),
-                3
-        );
+        ShortLink link = linkService.create("https://example.com", UUID.randomUUID(), 3);
 
         String url = redirectService.open(link.getCode());
 
@@ -36,11 +30,7 @@ class RedirectServiceTest {
 
     @Test
     void shouldAllowClicksUpToLimit() {
-        ShortLink link = linkService.create(
-                "https://example.com",
-                UUID.randomUUID(),
-                2
-        );
+        ShortLink link = linkService.create("https://example.com", UUID.randomUUID(), 2);
 
         redirectService.open(link.getCode());
         redirectService.open(link.getCode());
@@ -50,27 +40,17 @@ class RedirectServiceTest {
 
     @Test
     void shouldRejectClickWhenLimitExceeded() {
-        ShortLink link = linkService.create(
-                "https://example.com",
-                UUID.randomUUID(),
-                1
-        );
+        ShortLink link = linkService.create("https://example.com", UUID.randomUUID(), 1);
 
         redirectService.open(link.getCode());
 
-        assertThrows(
-                IllegalStateException.class,
-                () -> redirectService.open(link.getCode())
-        );
+        assertThrows(IllegalStateException.class, () -> redirectService.open(link.getCode()));
 
         assertEquals(1, link.getClickCount());
     }
 
     @Test
     void shouldRejectUnknownCode() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> redirectService.open("unknown")
-        );
+        assertThrows(IllegalArgumentException.class, () -> redirectService.open("unknown"));
     }
 }

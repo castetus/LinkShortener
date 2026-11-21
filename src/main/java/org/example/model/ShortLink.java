@@ -1,10 +1,9 @@
 package org.example.model;
 
-import org.example.AppConfig;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
+import org.example.AppConfig;
 
 public class ShortLink {
     private final String originalUrl;
@@ -15,12 +14,7 @@ public class ShortLink {
     private final Instant createdAt;
 
     public ShortLink(
-            String originalUrl,
-            String code,
-            UUID ownerId,
-            int clickLimit,
-            Instant createdAt
-    ) {
+            String originalUrl, String code, UUID ownerId, int clickLimit, Instant createdAt) {
         this.originalUrl = originalUrl;
         this.code = code;
         this.ownerId = ownerId;
@@ -62,9 +56,7 @@ public class ShortLink {
 
     public void updateClickLimit(int newLimit) {
         if (newLimit < clickCount) {
-            throw new IllegalArgumentException(
-                    "New limit cannot be less than current click count"
-            );
+            throw new IllegalArgumentException("New limit cannot be less than current click count");
         }
 
         this.clickLimit = newLimit;
