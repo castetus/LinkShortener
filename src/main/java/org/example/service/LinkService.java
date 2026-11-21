@@ -2,15 +2,16 @@ package org.example.service;
 
 import org.example.model.ShortLink;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LinkService {
 
-    private final Map<String, ShortLink> links = new HashMap<>();
+    private final Map<String, ShortLink> links = new ConcurrentHashMap<>();
     private final ShortCodeGenerator generator = new ShortCodeGenerator();
 
     public ShortLink create(
@@ -63,5 +64,9 @@ public class LinkService {
         }
 
         links.remove(code);
+    }
+
+    public void removeExpired(Instant now) {
+        links.values().removeIf(link -> link.isExpired(now));
     }
 }

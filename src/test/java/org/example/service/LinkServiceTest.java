@@ -2,20 +2,29 @@
 package org.example.service;
 
 import org.example.model.ShortLink;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LinkServiceTest {
 
+    private LinkService linkService;
+
+    @BeforeEach
+    void setUp() {
+        linkService = new LinkService();
+    }
+
     @Test
     void shouldCreateLinkWithProvidedData() {
-        LinkService service = new LinkService();
         UUID ownerId = UUID.randomUUID();
 
-        ShortLink link = service.create(
+        ShortLink link = linkService.create(
                 "https://example.com/article",
                 ownerId,
                 10
@@ -31,14 +40,64 @@ class LinkServiceTest {
 
     @Test
     void shouldInitializeClickCountToZero() {
-        LinkService service = new LinkService();
 
-        ShortLink link = service.create(
+        ShortLink link = linkService.create(
                 "https://example.com",
                 UUID.randomUUID(),
                 10
         );
 
         assertEquals(0, link.getClickCount());
+    }
+
+    @Test
+    void shouldDeleteExpiredLink() {
+        ShortLink link = linkService.create(
+                "https://example.com",
+                UUID.randomUUID(),
+                3
+        );
+
+        Instant now = link.getCreatedAt().plus(Duration.ofHours(25));
+
+        linkService.removeExpired(now);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> linkService.getByCode(link.getCode())
+        );
+    }
+
+    @Test
+    void shouldKeepActiveLink() {
+        ShortLink link = linkService.create(
+                "https://example.com",
+                UUID.randomUUID(),
+                3
+        );
+
+        Instant now = link.getCreatedAt().plus(Duration.ofHours(23));
+
+        linkService.removeExpired(now);
+
+        assertSame(link, linkService.getByCode(link.getCode()));
+    }
+
+    @Test
+    void shouldDeleteLinkExactlyAtExpiration() {
+        ShortLink link = linkService.create(
+                "https://example.com",
+                UUID.randomUUID(),
+                3
+        );
+
+        Instant now = link.getCreatedAt().plus(Duration.ofHours(24));
+
+        linkService.removeExpired(now);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> linkService.getByCode(link.getCode())
+        );
     }
 }

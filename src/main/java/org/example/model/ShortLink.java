@@ -1,5 +1,8 @@
 package org.example.model;
 
+import org.example.AppConfig;
+
+import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -65,5 +68,11 @@ public class ShortLink {
         }
 
         this.clickLimit = newLimit;
+    }
+
+    public boolean isExpired(Instant now) {
+        Duration ttl = AppConfig.LINK_TTL;
+        Instant expiresAt = createdAt.plus(ttl);
+        return !now.isBefore(expiresAt);
     }
 }
