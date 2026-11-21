@@ -8,27 +8,30 @@ import java.time.Duration;
 import java.util.Properties;
 
 public final class AppConfig {
-    private static final Properties properties = new Properties();
+    private static final Properties PROPERTIES = new Properties();
 
     static {
         try (InputStream input = Files.newInputStream(Path.of("config.properties"))) {
-            properties.load(input);
+            PROPERTIES.load(input);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot load config.properties", e);
         }
     }
 
     public static final Duration LINK_TTL =
-            Duration.ofHours(Long.parseLong(properties.getProperty("link.ttl.hours")));
+            Duration.ofHours(Long.parseLong(PROPERTIES.getProperty("link.ttl.hours")));
 
     public static final long CLEANUP_INTERVAL_MINUTES =
-            Long.parseLong(properties.getProperty("link.cleanup.interval.minutes"));
+            Long.parseLong(PROPERTIES.getProperty("link.cleanup.interval.minutes"));
 
     public static final int SHORT_CODE_LENGTH =
-            Integer.parseInt(properties.getProperty("link.code.length"));
+            Integer.parseInt(PROPERTIES.getProperty("link.code.length"));
 
     public static final int DEFAULT_CLICK_LIMIT =
-            Integer.parseInt(properties.getProperty("link.default-click-limit"));
+            Integer.parseInt(PROPERTIES.getProperty("link.default-click-limit"));
+
+    public static final String BASE_URL =
+            PROPERTIES.getProperty("link.base-url");
 
     private AppConfig() {}
 }

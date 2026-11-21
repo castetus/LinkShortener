@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-
 import org.example.AppConfig;
 import org.example.model.ShortLink;
 import org.example.service.LinkService;
 import org.example.service.RedirectService;
+import org.example.service.ShortUrlService;
 import org.example.session.UserSession;
 
 public class LinkController {
@@ -31,14 +31,12 @@ public class LinkController {
         }
 
         String url = args.get(0);
-        int limit = args.size() > 1
-                ? Integer.parseInt(args.get(1))
-                : AppConfig.DEFAULT_CLICK_LIMIT;
+        int limit = args.size() > 1 ? Integer.parseInt(args.get(1)) : AppConfig.DEFAULT_CLICK_LIMIT;
 
         UUID ownerId = userSession.getOrCreateUserId();
         ShortLink link = linkService.create(url, ownerId, limit);
 
-        return "Created: " + link.getCode();
+        return "Created: " + ShortUrlService.toShortUrl(link.getCode());
     }
 
     public String open(List<String> args) {
@@ -50,7 +48,11 @@ public class LinkController {
                 throw new IllegalStateException("Browser is not supported");
             }
 
-            String originalUrl = redirectService.open(args.get(0));
+            String code = ShortUrlService.extractCode(args.get(0));
+            String originalUrl = redirectService.open(code);
+
+            System.out.println(code);
+            System.out.println(originalUrl);
 
             Desktop.getDesktop().browse(URI.create(originalUrl));
 
@@ -78,7 +80,7 @@ public class LinkController {
         StringBuilder result = new StringBuilder();
 
         for (ShortLink link : links) {
-            result.append(link.getCode())
+            result.append(ShortUrlService.toShortUrl(link.getCode()))
                     .append(" -> ")
                     .append(link.getOriginalUrl())
                     .append(System.lineSeparator());
@@ -90,16 +92,17 @@ public class LinkController {
     public String info(List<String> args) {
         requireArgs(args, 1, "info <short-url>");
 
-        ShortLink link = linkService.getByCode(args.get(0));
+        String code = ShortUrlService.extractCode(args.get(0));
+        ShortLink link = linkService.getByCode(code);
 
         return """
-                Code: %s
+                Short URL: %s
                 Original URL: %s
                 Clicks: %d / %d
                 Created at: %s
                 """
                 .formatted(
-                        link.getCode(),
+                        ShortUrlService.toShortUrl(link.getCode()),
                         link.getOriginalUrl(),
                         link.getClickCount(),
                         link.getClickLimit(),
@@ -110,7 +113,7 @@ public class LinkController {
     public String edit(List<String> args) {
         requireArgs(args, 2, "edit <short-url> <new-limit>");
 
-        String code = args.get(0);
+        String code = ShortUrlService.extractCode(args.get(0));
         int newLimit = parsePositiveInt(args.get(1));
         UUID ownerId = requireUserId();
 
@@ -122,7 +125,7 @@ public class LinkController {
     public String delete(List<String> args) {
         requireArgs(args, 1, "delete <short-url>");
 
-        String code = args.get(0);
+        String code = ShortUrlService.extractCode(args.get(0));
         UUID ownerId = requireUserId();
 
         linkService.delete(code, ownerId);

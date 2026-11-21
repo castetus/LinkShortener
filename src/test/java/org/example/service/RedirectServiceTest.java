@@ -57,20 +57,11 @@ class RedirectServiceTest {
 
     @Test
     void shouldRejectExpiredLink() {
-        ShortLink link = linkService.create(
-                "https://example.com",
-                UUID.randomUUID(),
-                5
-        );
+        ShortLink link = linkService.create("https://example.com", UUID.randomUUID(), 5);
 
-        linkService.removeExpired(
-                link.getCreatedAt().plus(Duration.ofHours(25))
-        );
+        linkService.removeExpired(link.getCreatedAt().plus(Duration.ofHours(25)));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> redirectService.open(link.getCode())
-        );
+        assertThrows(IllegalArgumentException.class, () -> redirectService.open(link.getCode()));
 
         assertEquals(0, link.getClickCount());
     }

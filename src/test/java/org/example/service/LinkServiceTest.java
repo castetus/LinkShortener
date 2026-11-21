@@ -79,8 +79,7 @@ class LinkServiceTest {
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> linkService.updateLimit(link.getCode(), anotherUserId, 10)
-        );
+                () -> linkService.updateLimit(link.getCode(), anotherUserId, 10));
 
         assertEquals(5, link.getClickLimit());
     }
@@ -94,8 +93,7 @@ class LinkServiceTest {
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> linkService.delete(link.getCode(), anotherUserId)
-        );
+                () -> linkService.delete(link.getCode(), anotherUserId));
 
         assertSame(link, linkService.getByCode(link.getCode()));
     }
